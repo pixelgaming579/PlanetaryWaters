@@ -6,56 +6,38 @@ using ModLoader;
 using SFS;
 using SFS.WorldBase;
 
-namespace RocketMoverMod
+namespace PlanetaryWaters
 {
     public class Main : SFSMod
     {
-        GameObject menu;
-        bool menuVisible;
+        GameObject manager;
         public Main() : base("PlanetaryWaters", "PlanetaryWaters", "pixel_gamer579", "v1.x.x", "v1.0", "Adds water/oceans with physics to planets!"){}
         private void WorldLoaded(object sender, EventArgs e)
         {
-            menu = new GameObject("object");
-            menu.AddComponent<RocketMoverMenu>();
-            UnityEngine.Object.DontDestroyOnLoad(menu);
-            menu.SetActive(true);
-            menuVisible = menu.activeSelf;
+            manager = new GameObject("WaterManager");
+            manager.AddComponent<PlanetDataLoader>();
+            UnityEngine.Object.DontDestroyOnLoad(manager);
+            manager.SetActive(true);
         }
         private void HomeLoaded(object sender, EventArgs e)
         {
-            if (menu != null)
+            if (manager != null)
             {
-                UnityEngine.Object.Destroy(menu);
-                menu = null;
+                manager.GetComponent<PlanetDataLoader>().RemoveWaters();
+                UnityEngine.Object.Destroy(manager);
+                manager = null;
             }
         }
         private void BuildLoaded(object sender, EventArgs e)
         {
-            if (menu != null)
+            if (manager != null)
             {
-                UnityEngine.Object.Destroy(menu);
-                menu = null;
-            }
-        }
-        private void WorldUpdate(object sender, EventArgs e)
-        {
-            if (Input.GetKeyDown(KeyCode.Backslash))
-            {
-                menu.SetActive(!menu.activeSelf);
-                menuVisible = menu.activeSelf;
-            }
-            if (VideoSettingsPC.main.uiOpacitySlider.value == 0)
-            {
-                menu.SetActive(false);
-            }
-            else
-            {
-                menu.SetActive(menuVisible);
+                UnityEngine.Object.Destroy(manager);
+                manager = null;
             }
         }
         public override void load()
         {
-            Helper.OnUpdateWorldScene += this.WorldUpdate;
             Helper.OnWorldSceneLoaded += this.WorldLoaded;
             Helper.OnHomeSceneLoaded += this.HomeLoaded;
             Helper.OnBuildSceneLoaded += this.BuildLoaded;
