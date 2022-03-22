@@ -14,8 +14,7 @@ namespace PlanetaryWaters
         public Main() : base("PlanetaryWaters", "PlanetaryWaters", "pixel_gamer579", "v1.x.x", "v1.0", "Adds water/oceans with physics to planets!"){}
         private void WorldLoaded(object sender, EventArgs e)
         {
-            manager = new GameObject("WaterManager");
-            manager.AddComponent<PlanetDataLoader>();
+            manager = new GameObject("WaterManager", typeof(PlanetDataLoader));
             UnityEngine.Object.DontDestroyOnLoad(manager);
             manager.SetActive(true);
         }
